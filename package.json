@@ -1,0 +1,23 @@
+{
+  "name": "mc-weather-api",
+  "version": "1.0.1",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "nf start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.heroku.com/mc-weather-api.git"
+  },
+  "author": "marcelo araujo",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.0.0-rc.5",
+    "body-parser": "1.15.1",
+    "express": "4.13.4",
+    "foreman": "1.4.1",
+    "unirest": "0.5.0"
+  }
+}
