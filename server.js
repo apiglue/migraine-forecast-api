@@ -1,6 +1,3 @@
-/**
- * Created by marcelo on 5/15/16.
- */
 var express = require('express');
 var bodyParser = require('body-parser');
 var unirest = require('unirest');
@@ -36,15 +33,17 @@ router.get('/migraineindex', function (req, res) {
 
     var cityName = req.query.c;
 
-
     async.waterfall([
-        async.apply(getCity, cityName), get1dayForecast
+        async.apply(getCity, cityName), get5dayForecast
     ], function (err, result) {
-        res.json({migraineIndex : result});
+        res.json({migraineIndex: result});
     });
+
     function getCity(arg1, callback) {
 
-        var url = "http://dataservice.accuweather.com/locations/v1/search?apikey=" + accApiKey + " &q=" + arg1;
+        var url = "http://dataservice.accuweather.com/locations/v1/search?apikey=" + accApiKey + "&q=" + arg1;
+
+        console.log("City URL: " + url);
 
         unirest.get(url)
             .end(function (response) {
@@ -69,32 +68,42 @@ router.get('/migraineindex', function (req, res) {
 
     }
 
-    function get1dayForecast(arg2, callback) {
 
-        var url = "http://dataservice.accuweather.com/indices/v1/daily/1day/" + arg2 + "/27?apikey=" + accApiKey;
+    function get5dayForecast(arg2, callback) {
+
+        var url = "http://dataservice.accuweather.com/indices/v1/daily/5day/" + arg2 + "/27?apikey=" + accApiKey;
+        var results = {
+            forecast: []
+        };
+        var current_date = new Date();
+        var daysOfWeek = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+
+        console.log("Forecast URL: " + url);
 
         unirest.get(url)
             .end(function (response) {
 
-                var migraineIndex = "";
+                if (response.body.length >= 1) {
+                    for (i = 0; i < response.body.length; i++) {
+                        if (response.body[i].hasOwnProperty("Value")) {
+                            var item = response.body[i];
+                            results.forecast.push({
+                                "forecastDay": item.LocalDateTime,
+                                "forecastDayOfWeek":current_date.getDay(),
+                                "forecastDayOfWeekName":daysOfWeek[current_date.getDay()],
+                                "migraineindex": item.Value,
+                                "migrainedescription": item.Category
+                            });
 
-                if(response.body.length==1) {
+                            current_date.setDate(current_date.getDate() + 1);
+                        }
+                        else {
+                            console.log("get5dayForecast: Could not Index retrieve migraine index for city: " + arg2);
+                        }
 
-                    if (response.body[0].hasOwnProperty("Value")) {
-
-                        console.log("get1dayForecast: Found Index " + response.body[0].Value + " for city code " + arg2);
-                        migraineIndex = response.body[0].Value;
-                    }
-                    else {
-                        console.log("get1dayForecast: Could not Index retrieve migraine index for city: " + arg2);
                     }
                 }
-                else
-                {
-                    migraineIndex="-1";
-                }
-
-                callback(null, migraineIndex)
+                callback(null, results)
             });
     }
 
