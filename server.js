@@ -1,6 +1,6 @@
-/**
- * Created by marcelo on 5/15/16.
- */
+require('newrelic');
+
+require('dotenv').config();
 var express = require('express');
 var bodyParser = require('body-parser');
 var unirest = require('unirest');
