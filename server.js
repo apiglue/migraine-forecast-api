@@ -34,7 +34,7 @@ router.use(function (req, res, next) {
 //GET MIGRAINE INDEX
 router.get('/migraineindex', function (req, res) {
 
-    var cityName = req.query.c;
+    var cityName = decodeURI(req.query.c);
 
 
     async.waterfall([
