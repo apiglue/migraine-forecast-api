@@ -15,6 +15,7 @@ function getCityCode(cityName) {
         //
         axios.get(`https://dataservice.accuweather.com/locations/v1/cities/us/search?apikey=${accApiKey}&q=${cityName}`)
           .then((cityCoderesponse) => {
+            // TODO -- ACCOUNT FOR 503 - WHEN ACCUWEATHER API LIMIT IS EXCEEDED
             if (cityCoderesponse.data.length === 0 || cityCoderesponse.data.length > 1) {
               // EITHER TOO MANY RESULTS OR NOT AT ALL
               return resv(-1);
