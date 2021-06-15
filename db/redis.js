@@ -3,9 +3,10 @@ const redis = require('redis');
 const logger = require('../config/logger');
 
 const redisClientOptions = {
-  host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT,
-  auth_pass: process.env.REDIS_PASSWORD,
+  url: process.env.REDIS_TLS_URL,
+  tls: {
+    rejectUnauthorized: false,
+  },
   retry_strategy(options) {
     if (options.error && options.error.code === 'ECONNREFUSED') {
       // End reconnecting on a specific error and flush all commands with
