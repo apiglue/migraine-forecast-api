@@ -1,0 +1,97 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Migraine Forecast API - OpenAPI 3.0",
+    "description": "This api leverages Accuweather API to retrieve the current migraine forecast by a given US city\n\nSome useful links:\n- [Code repository](https://github.com/apiglue/migraine-forecast-api)\n",
+    "contact": {
+      "email": "@apiglue",
+      "name": "Marcelo",
+      "url": "twitter.com/apiglue"
+    },
+    "license": {
+      "name": "GNU v3.0",
+      "url": "https://www.gnu.org/licenses/gpl-3.0.en.html"
+    },
+    "version": "1.1.0"
+  },
+  "paths": {
+    "/api/migraineindex": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [
+          "CurrentForecast"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "migraineIndex": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "operationId": "get-api-migraineindex",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "c",
+            "description": "City and State. e.g. Chicago Illinois"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "apikey",
+            "description": "API Key"
+          }
+        ],
+        "description": "This endpoint will return the *current* migraine index for a given city in the US"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://migraine-forecast-api.herokuapp.com",
+      "description": "Production"
+    }
+  ],
+  "components": {
+    "securitySchemes": {},
+    "schemas": {
+      "error": {
+        "title": "error",
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
