@@ -8,8 +8,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "nyc mocha tests/*.js --timeout 10000 --exit",
-    "coverage": "nyc --reporter=lcov npm test"
+    "test": "npx nyc mocha tests/*.js --timeout 10000 --exit",
+    "coverage": "npx nyc --reporter=lcov npm test"
   },
   "repository": {
     "type": "git",
